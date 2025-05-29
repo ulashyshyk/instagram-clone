@@ -2,7 +2,7 @@
 
 A full-stack clone of Instagram built with **React**, **Node.js**, **Express**, and **MongoDB**. This project replicates key features of Instagram including user authentication, posting images, liking, following, and messaging. Designed with responsive UI and RESTful API architecture.
 
-> ⚠️ This project is still under development. Contributions & feedback welcome!
+> ⚠️ This project is still under development.
 
 ---
 
@@ -20,20 +20,28 @@ A full-stack clone of Instagram built with **React**, **Node.js**, **Express**, 
 
 ---
 
-## 🧱 Tech Stack
-
-### Frontend
-- React.js
-- Context API
-- Axios
-- Tailwind CSS
+## 🛠️ Tech Stack
 
 ### Backend
-- Node.js
-- Express.js
+- Node.js, Express.js
 - MongoDB + Mongoose
-- JSON Web Tokens (JWT)
-- Cloudinary SDK
+- Socket.io (Real-time messaging)
+- JWT for authentication
+- Bcrypt.js for password hashing
+- Multer + Cloudinary (Image uploads)
+- CORS, Dotenv
+- Day.js
+
+### Frontend
+- React 19, React Router DOM
+- Context API (state management)
+- Socket.io Client
+- Tailwind CSS, Chakra UI
+- Framer Motion (animations)
+- Lucide-react (icons)
+- Emoji Picker React
+- React Hot Toast (notifications)
+- Axios
 
 ---
 
@@ -80,23 +88,6 @@ npm start
 
 ---
 
-## 🖼️ Screenshots
-
-_Include screenshots here after deployment or UI completion._
-
----
-
-## 📌 TODO / In Progress
-
-- [x] Backend API for users, posts, likes
-- [x] JWT auth system
-- [x] Cloudinary integration
-- [ ] Deploy to Vercel & Render
-- [ ] Add unit testing
-- [ ] Add stories/comments functionality
-
----
-
 ## 🙋‍♂️ About Me
 
 Hi, I'm [Ulash Yshyk](https://www.linkedin.com/in/ulashyshyk/), a Computer Programming & Analysis student at Seneca Polytechnic, passionate about building scalable, full-stack applications. Currently seeking a **Fall 2025 Software Development Co-op** opportunity!
@@ -110,6 +101,3 @@ Hi, I'm [Ulash Yshyk](https://www.linkedin.com/in/ulashyshyk/), a Computer Progr
 
 ---
 
-## 📝 License
-
-This project is licensed under the [MIT License](LICENSE).

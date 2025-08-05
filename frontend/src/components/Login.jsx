@@ -10,13 +10,14 @@ const Login = () => {
   const {login,authLoading} = useAuth()
   const [showPassword,setShowPassword] = useState(false)
   const toast = useToast()
+  
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!email || !password) {
       toast({
-        title: "Error",
-        description: "Email and password are required.",
+        title: "Missing Information",
+        description: "Please enter both email and password.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -28,8 +29,8 @@ const Login = () => {
     try {
       await login(email, password)
       toast({
-        title: "Login Successful",
-        description: "Redirecting to home page...",
+        title: "Login Successful!",
+        description: "Welcome back! Redirecting to your dashboard...",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -37,14 +38,28 @@ const Login = () => {
       });
       setTimeout(() => {
         navigate('/')
-      }, 1000)
+      }, 1500)
     } catch (err) {
       console.error("Login Error:", err.response?.data?.message || err.message);
+      
+      let errorMessage = "An error occurred during login. Please try again.";
+      
+      if (err.response?.data?.message) {
+        const message = err.response.data.message;
+        if (message.includes("User not found")) {
+          errorMessage = "No account found with this email. Please check your email or create a new account.";
+        } else if (message.includes("Incorrect password")) {
+          errorMessage = "Incorrect password. Please check your password and try again.";
+        } else {
+          errorMessage = message;
+        }
+      }
+      
       toast({
         title: "Login Failed",
-        description: err.response?.data?.message || "An error occurred. Please try again.",
+        description: errorMessage,
         status: "error",
-        duration: 3000,
+        duration: 4000,
         isClosable: true,
         position: "top",
       });
@@ -52,42 +67,68 @@ const Login = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center w-[600px]'>
-      <h1 className='font-jaini text-4xl  pb-10'>Ulashgram</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-3 items-center w-full'>
-        <input
-          className=' bg-gray-100 py-1 px-2 border border-gray-300 rounded-md w-1/2'
-          type='email'
-          placeholder='Enter Email'
-          name='email'
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <div className='relative w-1/2'>
+    <div className='flex flex-col justify-center items-center w-full max-w-sm mx-auto px-4'>
+      <div className='bg-white border border-gray-300 rounded-lg p-8 w-full max-w-sm'>
+        <h1 className='font-jaini text-4xl text-center mb-8'>Ulashgram</h1>
+        
+        <form onSubmit={handleSubmit} className='space-y-3'>
           <input
-            className='bg-gray-100 px-2 py-1 border border-gray-300 rounded-md w-full'
-            type={showPassword ? 'text' : 'password'}
-            placeholder='Enter Password'
-            name='password'
-            onChange={(e) => setPassword(e.target.value)}
+            className='w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-400'
+            type='email'
+            placeholder='Enter Email'
+            name='email'
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
+          
+          <div className='relative'>
+            <input
+              className='w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-400'
+              type={showPassword ? 'text' : 'password'}
+              placeholder='Enter Password'
+              name='password'
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button 
+              className='absolute right-3 top-1/2 transform -translate-y-1/2 text-sm font-semibold text-blue-900 hover:text-blue-700'
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
+          
           <button 
-            className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-800 hover:text-gray-400'
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-          >{showPassword ? 'Hide' : 'Show'}</button>
-
+            disabled={authLoading} 
+            className='w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded text-sm hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed' 
+            type='submit'
+          >
+            {authLoading ? 'Logging in...' : 'Log in'}
+          </button>
+        </form>
+        
+        <div className='relative my-4'>
+          <hr className='border-gray-300' />
+          <span className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-xs font-semibold text-gray-500'>
+            OR
+          </span>
         </div>
-        <button disabled={authLoading} className='bg-blue-500 text-white w-1/2 border-1 rounded-md p-1 hover:bg-blue-600' type='submit'>{authLoading ? 'Logging in ...' : 'Log in'}</button>
-      </form>
-      <div class="inline flex items-center justify-center">
-        <hr class="w-64 h-px my-8 dark:bg-gray-700" />
-        <span class="absolute px-3 font-medium text-gray-900  bg-white dark:text-white dark:bg-gray-900">OR</span>
+        
+        <div className='text-center mt-4'>
+          <Link className='text-xs text-blue-900 hover:text-blue-700' to="/forgot-password">
+            Forgot password?
+          </Link>
+        </div>
       </div>
-      <div className='flex flex-row gap-1'>
-        <p>Don't have an account?</p> 
-        <Link className='text-blue-600 cursor-pointer hover:text-blue-400' to="/signup">Sign up</Link>
+      
+      <div className='bg-white border border-gray-300 rounded-lg p-4 w-full max-w-sm mt-3'>
+        <div className='text-center'>
+          <span className='text-sm'>Don't have an account? </span>
+          <Link className='text-sm font-semibold text-blue-500 hover:text-blue-400' to="/signup">
+            Sign up
+          </Link>
+        </div>
       </div>
     </div>
   )

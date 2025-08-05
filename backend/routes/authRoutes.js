@@ -36,7 +36,19 @@ router.post('/register',async (req,res) => {
     const hashedPassword = await bcrypt.hash(password,10)
     const newUser = await User.create({username,email,password : hashedPassword});
 
-    res.status(201).json({message:"Account created. Please log in",newUser})
+    res.status(201).json({
+      message: "Account created successfully",
+      user: {
+        _id: newUser._id,
+        username: newUser.username,
+        name: newUser.name,
+        email: newUser.email,
+        bio: newUser.bio,
+        profilePic: newUser.profilePic,
+        followersCount: newUser.followers.length,
+        followingCount: newUser.following.length
+      }
+    })
   } catch (err) {
     console.error('REGISTER ERROR:',err)
     res.status(500).json({message:"Server error. Please try again later"});

@@ -29,6 +29,39 @@ export const AuthProvider = ({ children }) => {
     })
   }
   
+  //  Registration function
+  const register = async (username, email, password) => {
+    try {
+      setAuthLoading(true)
+
+      const response = await axios.post(
+        "http://localhost:5001/api/auth/register",
+        { username, email, password }
+      );
+
+      // After successful registration, automatically log in
+      const loginResponse = await axios.post(
+        "http://localhost:5001/api/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
+
+      const { accessToken, user } = loginResponse.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      setUser(user)
+      setIsAuthenticated(true);
+      
+      return { success: true, user };
+    } catch (error) {
+      console.log("Registration failed:", error);
+      throw error;
+    } finally {
+      setAuthLoading(false)
+    }
+  };
+  
   //  Login function
   const login = async (email, password) => {
     try {
@@ -61,6 +94,8 @@ export const AuthProvider = ({ children }) => {
       await axios.post("http://localhost:5001/api/auth/logout", {}, { withCredentials: true });
 
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
+      setUser(null);
       setIsAuthenticated(false);
     } catch (error) {
       console.error("Logout failed:", error);
@@ -85,7 +120,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, refreshAccessToken,user,updateUser,authLoading,authChecking}}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, register, refreshAccessToken,user,updateUser,authLoading,authChecking}}>
       {children}
     </AuthContext.Provider>
   );

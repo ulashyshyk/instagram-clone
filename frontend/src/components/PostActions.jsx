@@ -22,7 +22,13 @@ const PostActions = ({ post, onLike,onCommentClick,type }) => {
   return (
     <div className="px-4 pt-3 pb-4">
       <div className="flex items-center gap-4 text-xl">
-        <button onClick={handleLike} className="focus:outline-none">
+        <button
+          type="button"
+          aria-label={liked ? 'Unlike' : 'Like'}
+          onClick={handleLike}
+          className="outline-none focus:outline-none focus:ring-0 active:outline-none active:ring-0 appearance-none"
+          style={{ WebkitTapHighlightColor: 'transparent' }}
+        >
           {liked ? (
             <FaHeart className="text-red-500 transition-transform hover:scale-110" />
           ) : (

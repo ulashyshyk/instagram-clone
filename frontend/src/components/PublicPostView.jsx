@@ -15,6 +15,17 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
   const { user } = useAuth()
 
   useEffect(() => {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    document.body.style.overflow = 'hidden'
+    document.body.style.paddingRight = `${scrollbarWidth}px`
+
+    return () => {
+      document.body.style.overflow = 'auto'
+      document.body.style.paddingRight = '0px'
+    }
+  }, [])
+
+  useEffect(() => {
     if (!initialPost?._id) return
 
     const fetchFullPost = async () => {
@@ -36,19 +47,19 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
   if (!post?._id || !post.likes || !user?._id) return null
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-[10001] bg-black bg-opacity-70 flex items-center justify-center">
+    <div className="fixed inset-0 z-[10001] bg-black bg-opacity-70 flex items-center justify-center overflow-y-hidden overscroll-none">
       <button
         onClick={() => setIsModalOpen(false)}
-        className="absolute top-3 right-3 text-white bg-opacity-50 px-2 py-1 hover:bg-opacity-70 transition"
+        className="absolute top-3 right-3 z-20 text-white bg-opacity-50 px-2 py-1 hover:bg-opacity-70 transition"
       >
         ✕
       </button>
 
-      <div className="bg-white shadow-2xl flex lg:w-[1100px] lg:h-[630px] overflow-hidden relative">
-        <div className="relative w-[60%] h-full">
+      <div className="bg-white shadow-2xl flex flex-col md:flex-row w-full h-full md:w-[1100px] md:h-[630px] overflow-hidden relative md:rounded-lg">
+        <div className="relative w-full md:w-[60%] h-[60vh] md:h-full">
           {post.media?.[mediaIndex]?.type === 'video' ? (
             <video
-              src={post.media[mediaIndex].url}
+              src={post.media?.[mediaIndex]?.url}
               className="w-full h-full object-cover"
               controls
               playsInline
@@ -74,7 +85,7 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
             </button>
           )}
 
-          {mediaIndex < post.media.length - 1 && (
+          {post.media?.length > 0 && mediaIndex < post.media.length - 1 && (
             <button
               onClick={() => setMediaIndex(prev => prev + 1)}
               className="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full"
@@ -84,7 +95,7 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
           )}
         </div>
 
-        <div className="w-[40%] h-full flex flex-col">
+        <div className="w-full md:w-[40%] h-[50vh] sm:h-[40vh] md:h-full flex flex-col bg-white min-h-0">
           {type === 'feed' ? (
             <Link to={`/profile/${post.author?.username}`} className="flex flex-row p-4 items-center gap-3">
               <img
@@ -107,28 +118,32 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
 
           <p className="border-t border-gray-200 w-full"></p>
 
-          <CommentSection
-            comments={post.comments || []}
-            postAuthorId={post.author?._id}
-            currentUserId={user._id}
-            onDeleteComment={() => {}}
-          />
+          <div className="flex-1 overflow-y-auto px-2 sm:px-4">
+            <CommentSection
+              comments={post.comments || []}
+              postAuthorId={post.author?._id}
+              currentUserId={user._id}
+              onDeleteComment={() => {}}
+            />
+          </div>
 
-          <PostActions
-            post={post}
-            onCommentClick={() => commentInputRef.current?.focusInput()}
-          />
+          <div className="p-2 sm:p-4 mt-auto">
+            <PostActions
+              post={post}
+              onCommentClick={() => commentInputRef.current?.focusInput()}
+            />
 
-          <CommentInput
-            ref={commentInputRef}
-            postId={post._id}
-            onCommentAdded={(updatedPost) => {
-              setPost(prev => ({
-                ...updatedPost,
-                author: prev.author
-              }))
-            }}
-          />
+            <CommentInput
+              ref={commentInputRef}
+              postId={post._id}
+              onCommentAdded={(updatedPost) => {
+                setPost(prev => ({
+                  ...updatedPost,
+                  author: prev.author
+                }))
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>,

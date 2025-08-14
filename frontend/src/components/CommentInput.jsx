@@ -56,6 +56,19 @@ const CommentInput = forwardRef(({ postId, onCommentAdded }, ref) => {
         type="text"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
+        onKeyDown={(e) => {
+          if (
+            e.key === 'Enter' &&
+            !e.shiftKey &&
+            // Avoid submitting while using IME/composition
+            !(e.nativeEvent && e.nativeEvent.isComposing)
+          ) {
+            e.preventDefault()
+            if (!loading) {
+              handleSubmit()
+            }
+          }
+        }}
         placeholder="Add a comment..."
         className="flex-1 px-4 py-2 text-sm border-none outline-none focus:ring-0 focus:outline-none active:outline-none"
       />

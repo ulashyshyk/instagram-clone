@@ -8,6 +8,7 @@ import axios from "axios";
 import camera2 from "../assets/camera2.png";
 import PublicPostCard from "../components/PublicPostCard";
 import { useAuth } from "../context/AuthContext";
+import Spinner from "../components/Spinner";
 const PublicProfilePage = () => {
   const { updateUser } = useAuth();
   const { username } = useParams();
@@ -86,7 +87,7 @@ const PublicProfilePage = () => {
     <div>
       <div className="flex flex-row  overflow-x-hidden">
         <Sidebar />
-        <div className="flex flex-col  w-full ml-[65px] p-4 md:ml-[249px] justify-between items-center">
+        <div className="flex flex-col w-full p-4 md:ml-[249px] justify-between items-center">
           <PublicProfile
             user={user}
             onFollowToggle={handleFollowToggle}

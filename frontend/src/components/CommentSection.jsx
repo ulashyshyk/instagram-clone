@@ -25,7 +25,7 @@ const CommentSection = ({
   }, [comments]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 pt-4 space-y-4 max-h-[40vh]  lg:max-h-[70%]">
+    <div className="h-full px-4 pt-4 space-y-4">
       {comments.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full text-center">
           <p className="text-[24px] font-bold">No comments yet.</p>

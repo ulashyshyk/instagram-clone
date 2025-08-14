@@ -103,19 +103,19 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
   }, [initialPost._id])
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-[10001] bg-black bg-opacity-70 flex items-center justify-center">
+    <div className="fixed inset-0 z-[10001] bg-black bg-opacity-70 flex items-center justify-center overflow-y-hidden overscroll-none">
       <button
         onClick={() => setIsModalOpen(false)}
-        className="absolute top-3 right-3 text-white  bg-opacity-50 px-2 py-1  hover:bg-opacity-70 transition"
-        >
+        className="absolute top-3 right-3 z-20 text-white  bg-opacity-50 px-2 py-1  hover:bg-opacity-70 transition"
+      >
         ✕
       </button>
-      <div className="bg-white shadow-lg flex lg:w-[1100px] lg:h-[630px] overflow-hidden relative">
-        <div className='relative w-[60%] h-full'>
+      <div className="bg-white shadow-lg flex flex-col md:flex-row w-full h-full md:w-[1100px] md:h-[630px] overflow-hidden relative md:rounded-lg">
+        <div className='relative w-full md:w-[60%] h-[60vh] md:h-full'>
           {post.media?.[mediaIndex]?.type === 'video' ? (
-            <video src={post.media[mediaIndex].url} controls className='w-full h-full object-cover' />
+            <video src={post.media?.[mediaIndex]?.url} controls playsInline className='w-full h-full object-cover' />
           ) : (
-            <img src={post.media[mediaIndex].url} className='w-full h-full object-cover' />
+            <img src={post.media?.[mediaIndex]?.url} className='w-full h-full object-cover' alt="Post media" />
           )}
 
           {mediaIndex > 0 && (
@@ -127,7 +127,7 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
             </button>
           )}
 
-          {mediaIndex < post.media.length - 1 && (
+          {post.media?.length > 0 && mediaIndex < post.media.length - 1 && (
             <button
               onClick={() => setMediaIndex(prev => prev + 1)}
               className="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full"
@@ -136,7 +136,7 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
         </div>
 
 
-        <div className="w-[40%] h-full flex flex-col ">
+        <div className="w-full md:w-[40%] h-[50vh] sm:h-[40vh] md:h-full flex flex-col bg-white min-h-0">
           <div className='flex flex-row p-4 items-center justify-between'>
             <div className='flex flex-row mb-2 items-center gap-3'>
               <img className='w-[40px] h-[40px] rounded-full object-cover cursor-pointer'  src={user.profilePic || profile_pic}/>
@@ -157,7 +157,7 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
                   </button>
                   <button
                     onClick={() => setEditing(false)}
-                    className="text-gray-500 text-black ml-5 font-medium"
+                    className="text-gray-500 ml-5 font-medium"
                   >
                     Cancel
                   </button>
@@ -179,21 +179,25 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
             onClose={() => setShowPostMenu(false)}
           />
         )}
-          <CommentSection
-            comments={post.comments}
-            postAuthorId={post.author._id}
-            currentUserId={user._id}
-            onDeleteComment={handleDeleteComment}
-          />
+          <div className="flex-1 overflow-y-auto px-2 sm:px-4">
+            <CommentSection
+              comments={post.comments}
+              postAuthorId={post.author._id}
+              currentUserId={user._id}
+              onDeleteComment={handleDeleteComment}
+            />
+          </div>
 
-          <p className="border-t border-gray-200 w-full -mt-3"></p>
+          <div className="border-t border-gray-200 w-full"></div>
 
-          <PostActions post={post} onCommentClick={()=> commentInputRed.current?.focusInput()}/>
-          <CommentInput
-            ref={commentInputRed}
-            postId={post._id}
-            onCommentAdded={(updatedPost) => setPost(updatedPost)} 
-          />
+          <div className="p-2 sm:p-4 mt-auto">
+            <PostActions post={post} onCommentClick={()=> commentInputRed.current?.focusInput()}/>
+            <CommentInput
+              ref={commentInputRed}
+              postId={post._id}
+              onCommentAdded={(updatedPost) => setPost(updatedPost)} 
+            />
+          </div>
         </div>
       </div>
     </div>,

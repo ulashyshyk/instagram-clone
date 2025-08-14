@@ -31,7 +31,7 @@ const MessagesPage = () => {
 
   return (
     <div className="flex pb-[65px] sm:pb-0 w-full h-[100vh] sm:min-h-screen overflow-x-hidden select-none">
-      <Sidebar compact={!!selectedUser} />
+        <Sidebar compact={!!selectedUser} />
       <div className="flex w-full sm:hidden">
         {selectedUser === null ? (
          <ChatSidebar setSelectedUser={setSelectedUser} />

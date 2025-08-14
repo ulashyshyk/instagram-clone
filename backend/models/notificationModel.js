@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const notificationSchema = new mongoose.Schema({
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // who triggered it
     receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true }, // who receives it
-    type: { type: String, enum: ['follow', 'like', 'comment'], required: true },
+    type: { type: String, enum: ['follow', 'like', 'comment', 'message'], required: true },
     post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' }, // optional, for like/comment
     isRead: { type: Boolean, default: false },
   }, { timestamps: true });

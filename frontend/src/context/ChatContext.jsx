@@ -12,6 +12,7 @@ export const ChatProvider = ({ children }) => {
   const [allChats, setAllChats] = useState([]);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const socket = useRef(null);
+  const selectedUserRef = useRef(null);
 
   const fetchUnreadChatCount = async () => {
     try {
@@ -45,6 +46,11 @@ export const ChatProvider = ({ children }) => {
       console.error("❌ Error in markMessagesAsRead:", error?.response?.data || error.message);
     }
   };
+
+  // Keep a live ref of selectedUser for socket callbacks
+  useEffect(() => {
+    selectedUserRef.current = selectedUser;
+  }, [selectedUser]);
   
 
   const loadAllChats = async () => {
@@ -85,6 +91,11 @@ export const ChatProvider = ({ children }) => {
       }));
       updateAllChatsAfterMessage();
       fetchUnreadChatCount();
+
+      // If chat with the sender is open, mark their messages as read
+      if (selectedUserRef.current?.username === msg.senderUsername) {
+        markMessagesAsRead(msg.senderUsername, user.username);
+      }
     });
 
     fetchUnreadChatCount();
@@ -106,6 +117,7 @@ export const ChatProvider = ({ children }) => {
       receiverUsername,
       message,
       temp: true,
+      createdAt: new Date().toISOString(),
     };
     setMessagesByUser((prev) => ({
       ...prev,
@@ -140,8 +152,11 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     if (selectedUser) {
       loadMessagesForUser(selectedUser.username);
+      if (user) {
+        markMessagesAsRead(selectedUser.username, user.username);
+      }
     }
-  }, [selectedUser]);
+  }, [selectedUser, user]);
 
   const messages = selectedUser?.username
     ? messagesByUser[selectedUser.username] || []

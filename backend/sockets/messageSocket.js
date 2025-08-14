@@ -1,5 +1,6 @@
 import User from '../models/user.model.js'
 import Message from '../models/Message.js'
+import Notification from '../models/notificationModel.js'
 
 export const messageSocketHandler = (io) => {
   io.on("connection", (socket) => {
@@ -35,17 +36,25 @@ export const messageSocketHandler = (io) => {
         createdAt: newMessage.createdAt
       })
 
+      // Persist a notification for messages and emit
+      const notification = new Notification({
+        sender: sender._id,
+        receiver: receiver._id,
+        type: 'message'
+      })
+      await notification.save()
+
       io.to(receiver._id.toString()).emit("notify", {
-        _id: newMessage._id,
+        _id: notification._id,
         sender: {
           _id: sender._id,
           username: sender.username,
           profilePic: sender.profilePic
         },
         type: "message",
-        createdAt: new Date(),
-        isRead: false
-      });
+        createdAt: notification.createdAt,
+        isRead: notification.isRead
+      })
 
       console.log(`Message sent from ${senderUsername} ---> ${receiverUsername}`)
     })

@@ -74,11 +74,11 @@ const NotificationModal = ({ isOpen, onClose }) => {
           >
             <h2 className="text-[24px] font-bold mb-6">Notifications</h2>
 
-            <div className='flex mt-5 max-h-[90%] flex-col gap-4 overflow-y-auto pr-1 w-[105%]'>
+            <div className='flex mt-5  max-h-[90%] flex-col gap-4 overflow-y-auto pr-1 w-[105%]'>
               {notifications.map((notification) => (
                 <div
                   key={notification._id}
-                  className='flex flex-row items-center hover:bg-gray-100 hover:rounded-xs'
+                  className='flex flex-row items-center hover:bg-gray-100 p-1 hover:rounded-md  border-rounded-xl'
                 >
 
                   <Link to={`/profile/${notification.sender?.username}`} onClick={onClose}>
@@ -95,6 +95,7 @@ const NotificationModal = ({ isOpen, onClose }) => {
                         {notification.type === 'like' && ' liked your post.'}
                         {notification.type === 'comment' && ' commented on your post.'}
                         {notification.type === 'follow' && ' followed you.'}
+                        {notification.type === 'message' && ' sent you a message.'}
                       </p>
                     </Link>
                     <p className='text-[12px] text-[#737373]'>

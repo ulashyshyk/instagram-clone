@@ -86,7 +86,7 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
 
           {/* Mobile full-screen bottom sheet */}
           <motion.div
-            className="fixed top-0 left-0 right-0 bottom-[60px] z-50 bg-white p-6 md:hidden flex flex-col"
+            className="fixed top-0 left-0 right-0 bottom-[60px] z-50 bg-white dark:bg-black p-6 md:hidden flex flex-col"
             variants={mobileSlideUp}
             initial="hidden"
             animate="visible"
@@ -96,20 +96,20 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
           >
             <button
               aria-label="Close notifications"
-              className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100"
+              className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={onClose}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-black dark:text-white">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <h2 className="text-[24px] font-bold mb-6 pr-10">Notifications</h2>
+            <h2 className="text-[24px] font-bold mb-6 pr-10 text-black dark:text-white">Notifications</h2>
 
             <div className='flex mt-5  max-h-[90%] flex-col gap-4 overflow-y-auto pr-1 w-[105%]'>
               {notifications.map((notification) => (
                 <div
                   key={notification._id}
-                  className='flex flex-row items-center hover:bg-gray-100 p-1 hover:rounded-md  border-rounded-xl'
+                  className='flex flex-row items-center hover:bg-gray-100 dark:hover:bg-gray-800 p-1 hover:rounded-md  border-rounded-xl'
                 >
 
                   <Link to={`/profile/${notification.sender?.username}`} onClick={onClose}>
@@ -121,7 +121,7 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
                   </Link>
                   <div className='flex flex-col ml-2 flex-1'>
                     <Link to={`/profile/${notification.sender?.username}`} onClick={onClose}>
-                      <p className='text-[14px]'>
+                      <p className='text-[14px] text-black dark:text-white'>
                         <span className='text-[13px] font-medium'>{notification.sender?.username}</span><br />
                         {notification.type === 'like' && ' liked your post.'}
                         {notification.type === 'comment' && ' commented on your post.'}
@@ -129,7 +129,7 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
                         {notification.type === 'message' && ' sent you a message.'}
                       </p>
                     </Link>
-                    <p className='text-[12px] text-[#737373]'>
+                    <p className='text-[12px] text-[#737373] dark:text-gray-400'>
                       {formatShortTimeAgo(notification.createdAt)}
                     </p>
                   </div>
@@ -172,7 +172,7 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
           </motion.div>
 
           <motion.div
-            className={`hidden md:block fixed top-0 ${isSidebarCompact ? 'left-[85px]' : 'left-[249px]'} h-full w-[320px] bg-white z-50 p-6 shadow-lg border-l border-gray-200`}
+            className={`hidden md:block fixed top-0 ${isSidebarCompact ? 'left-[85px]' : 'left-[249px]'} h-full w-[320px] bg-white dark:bg-black z-50 p-6 shadow-lg border-l border-gray-200 dark:border-gray-800`}
             variants={desktopSlideIn}
             initial="hidden"
             animate="visible"
@@ -182,20 +182,20 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
           >
             <button
               aria-label="Close notifications"
-              className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100"
+              className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={onClose}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-black dark:text-white">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <h2 className="text-[24px] font-bold mb-6">Notifications</h2>
+            <h2 className="text-[24px] font-bold mb-6 text-black dark:text-white">Notifications</h2>
 
             <div className='flex mt-5  max-h-[90%] flex-col gap-4 overflow-y-auto pr-1 w-[105%]'>
               {notifications.map((notification) => (
                 <div
                   key={notification._id}
-                  className='flex flex-row items-center hover:bg-gray-100 p-1 hover:rounded-md  border-rounded-xl'
+                  className='flex flex-row items-center hover:bg-gray-100 dark:hover:bg-gray-800 p-1 hover:rounded-md  border-rounded-xl'
                 >
 
                   <Link to={`/profile/${notification.sender?.username}`} onClick={onClose}>
@@ -207,7 +207,7 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
                   </Link>
                   <div className='flex flex-col ml-2 flex-1'>
                     <Link to={`/profile/${notification.sender?.username}`} onClick={onClose}>
-                      <p className='text-[14px]'>
+                      <p className='text-[14px] text-black dark:text-white'>
                         <span className='text-[13px] font-medium'>{notification.sender?.username}</span><br />
                         {notification.type === 'like' && ' liked your post.'}
                         {notification.type === 'comment' && ' commented on your post.'}
@@ -215,7 +215,7 @@ const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
                         {notification.type === 'message' && ' sent you a message.'}
                       </p>
                     </Link>
-                    <p className='text-[12px] text-[#737373]'>
+                    <p className='text-[12px] text-[#737373] dark:text-gray-400'>
                       {formatShortTimeAgo(notification.createdAt)}
                     </p>
                   </div>

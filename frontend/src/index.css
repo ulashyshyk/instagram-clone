@@ -6,6 +6,22 @@ body{
     font-family: 'Roboto';
     overflow-x:hidden ;
 }
+
+html.dark {
+    color-scheme: dark;
+}
+
+/* Instagram-style dark mode colors */
+.dark {
+    --bg-primary: #000000;
+    --bg-secondary: #121212;
+    --bg-tertiary: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #a8a8a8;
+    --border-color: #262626;
+    --hover-color: #1a1a1a;
+}
+
 * {
     transition: all 0.1s ease-in-out;
     scroll-behavior: smooth;

@@ -80,7 +80,7 @@ const PostCard = ({ post, onPostDeleted, autoOpen, setSelectedPostId }) => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-[160px] aspect-[3/4] sm:max-w-[200px] bg-white shadow-2xl hover:bg-gray-100 overflow-hidden cursor-pointer relative group"
+        className="w-full max-w-[160px] aspect-[3/4] sm:max-w-[200px] bg-white dark:bg-gray-900 shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-800 overflow-hidden cursor-pointer relative group"
       >
         <div className="w-full h-full overflow-hidden">
           <div

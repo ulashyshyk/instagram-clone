@@ -47,7 +47,7 @@ const CommentInput = forwardRef(({ postId, onCommentAdded }, ref) => {
       <button
         type="button"
         onClick={() => setShowEmojiPicker(true)}
-        className="text-2xl mb-1 hover:scale-110 transition mt-2"
+        className="text-2xl mb-1 hover:scale-110 transition mt-2 text-black dark:text-white"
       >
         <MdOutlineEmojiEmotions />
       </button>
@@ -70,7 +70,7 @@ const CommentInput = forwardRef(({ postId, onCommentAdded }, ref) => {
           }
         }}
         placeholder="Add a comment..."
-        className="flex-1 px-4 py-2 text-sm border-none outline-none focus:ring-0 focus:outline-none active:outline-none"
+        className="flex-1 px-4 py-2 text-sm border-none outline-none focus:ring-0 focus:outline-none active:outline-none text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
       />
       <button
         onClick={handleSubmit}

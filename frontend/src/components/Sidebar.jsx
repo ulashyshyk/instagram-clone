@@ -7,8 +7,11 @@ import { FaRegHeart } from "react-icons/fa";
 import { FiPlusSquare } from "react-icons/fi";
 import { FaInstagram } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
+import { Moon, Sun } from "lucide-react";
 import Modal from "./Modal";
+import DarkModeToggle from "./DarkModeToggle";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import profile_pic from "../assets/profile_pic.jpg";
 import PostModal from "./PostModal";
 import SearchModal from "./SearchModal";
@@ -19,6 +22,7 @@ import { useChat } from "../context/ChatContext";
 const Sidebar = ({ compact = false }) => {
   const [activeModal, setActiveModal] = useState(null);
   const { user } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useTheme();
   const { unreadCount } = useNotification();
   const { unreadChatCount,fetchUnreadChatCount } = useChat();
 
@@ -27,18 +31,18 @@ const Sidebar = ({ compact = false }) => {
   }, [fetchUnreadChatCount])
 
   const itemBase = `relative flex flex-row md:w-full items-center ${compact ? "md:justify-center" : ""} gap-2 p-2 rounded-lg transition-colors`;
-  const itemHover = "hover:bg-gray-200";
-  const itemActive = "bg-gray-200";
-  const labelClass = compact ? "hidden" : "hidden md:inline";
+  const itemHover = "hover:bg-gray-200 dark:hover:bg-gray-800";
+  const itemActive = "bg-gray-200 dark:bg-gray-800";
+  const labelClass = compact ? "hidden" : "hidden md:inline text-black dark:text-white";
   const containerWidth = compact ? "md:w-[80px] md:p-4" : "md:w-[250px] md:p-7";
   return (
-    <div className={`flex gap-0 flex-row md:flex-col ${containerWidth} p-4 md:h-[100vh] border-t-2 md:border-r-2 border-gray-100 fixed bottom-0 w-full justify-between items-center ${compact ? "md:items-center" : "md:items-start"} md:gap-6 md:fixed md:left-0 md:top-0  bg-white shadow md:shadow-none z-50`}>
+    <div className={`flex gap-0 flex-row md:flex-col ${containerWidth} p-4 md:h-[100vh] border-t-2 md:border-r-2 border-gray-100 dark:border-gray-800 fixed bottom-0 w-full justify-between items-center ${compact ? "md:items-center" : "md:items-start"} md:gap-6 md:fixed md:left-0 md:top-0 bg-white dark:bg-black shadow md:shadow-none z-50`}>
       <div>
-        <Link to="/" className={`font-jaini text-3xl ${compact ? "hidden" : "hidden md:block"}`}>
+        <Link to="/" className={`font-jaini text-3xl ${compact ? "hidden" : "hidden md:block"} dark:text-white`}>
           Ulashgram
         </Link>
         <Link to="/">
-          <FaInstagram className="block md:hidden text-2xl mx-auto" />
+          <FaInstagram className="block md:hidden text-2xl mx-auto dark:text-white" />
         </Link>
       </div>
 
@@ -46,7 +50,7 @@ const Sidebar = ({ compact = false }) => {
         to="/"
         className={({ isActive }) => `${itemBase} ${isActive ? itemActive : itemHover}`}
       >
-        <BiHomeAlt2 className="text-3xl" />
+        <BiHomeAlt2 className="text-3xl text-black dark:text-white" />
         <span className={labelClass}>Home</span>
       </NavLink>
 
@@ -54,7 +58,7 @@ const Sidebar = ({ compact = false }) => {
         onClick={() => setActiveModal((prev) => (prev === "search" ? null : "search"))}
         className={`${itemBase} ${activeModal === "search" ? itemActive : itemHover}`}
       >
-        <IoIosSearch className="text-3xl" />
+        <IoIosSearch className="text-3xl text-black dark:text-white" />
         <span className={labelClass}>Search</span>
       </button>
 
@@ -66,7 +70,7 @@ const Sidebar = ({ compact = false }) => {
         to="/messages"
         className={({ isActive }) => `${itemBase} ${isActive ? itemActive : itemHover}`}
       >
-        <MessageCircle />
+        <MessageCircle className="text-black dark:text-white" />
         {unreadChatCount > 0 && (
           <span className="absolute top-1 left-2 transform translate-x-2 -translate-y-1 text-[10px] bg-red-500 text-white rounded-full px-[6px] py-[1px] font-bold">
             {unreadChatCount}
@@ -80,7 +84,7 @@ const Sidebar = ({ compact = false }) => {
         onClick={() => setActiveModal((prev) => (prev === "notification" ? null : "notification"))}
         className={`${itemBase} ${activeModal === "notification" ? itemActive : itemHover}`}
       >
-        <FaRegHeart className="text-2xl" />
+        <FaRegHeart className="text-2xl text-black dark:text-white" />
         {unreadCount > 0 && (
           <span className="absolute top-1 left-2 transform translate-x-2 -translate-y-1 text-[10px] bg-red-500 text-white rounded-full px-[6px] py-[1px] font-bold">
             {unreadCount}
@@ -97,13 +101,28 @@ const Sidebar = ({ compact = false }) => {
         onClick={() => setActiveModal("post")}
         className={`flex flex-row md:w-full items-center ${compact ? "md:justify-center" : ""} gap-2 bg-indigo-600 text-white hover:bg-indigo-600/90 active:scale-[.99] p-2 rounded-lg`}
       >
-        <FiPlusSquare className="text-2xl" />
-        <span className={labelClass}>Create</span>
+        <FiPlusSquare className="text-2xl text-white" />
+        <span className={`${labelClass} text-white`}>Create</span>
       </button>
 
       {activeModal === "post" && (
         <PostModal setPostModalOpen={() => setActiveModal(null)} />
       )}
+
+      {/* Dark Mode Toggle - Desktop Only */}
+      <div className={`${itemBase} ${itemHover} hidden md:flex items-center ${compact ? "justify-center" : "justify-between"}`}>
+        {!compact && (
+          <div className="flex items-center gap-2">
+            {isDarkMode ? (
+              <Sun className="text-2xl dark:text-white" />
+            ) : (
+              <Moon className="text-2xl dark:text-white" />
+            )}
+            <span className={labelClass}>{isDarkMode ? "Light" : "Dark"}</span>
+          </div>
+        )}
+        <DarkModeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} compact={compact} />
+      </div>
 
       <NavLink
         to="/profile"
@@ -119,10 +138,10 @@ const Sidebar = ({ compact = false }) => {
 
       <button
         onClick={() => setActiveModal("menu")}
-        className={`flex flex-row mt-auto md:w-full items-center ${compact ? "md:justify-center" : ""} gap-2 p-2 rounded-lg hover:bg-gray-200`}
+        className={`flex flex-row mt-auto md:w-full items-center ${compact ? "md:justify-center" : ""} gap-2 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700`}
       >
-        <IoMenu className="text-2xl" />
-        <span className={labelClass}>More</span>
+        <IoMenu className="text-2xl dark:text-white" />
+        <span className={`${labelClass} dark:text-white`}>More</span>
       </button>
 
       {activeModal === "menu" && (

@@ -81,8 +81,8 @@ const ChatBox = ({ selectedUser, goBack }) => {
   };
 
   return (
-    <div className="flex  flex-col w-full sm:flex-1 bg-white sm:h-full min-h-0">
-      <div className="sm:sticky sm:top-0 sm:z-10 sm:bg-white flex flex-row items-center border-b-2  ">
+    <div className="flex  flex-col w-full sm:flex-1 bg-white dark:bg-black sm:h-full min-h-0">
+      <div className="md:sticky md:top-0 md:z-10 md:bg-white dark:md:bg-black flex flex-row items-center border-b-2 border-gray-200 dark:border-gray-800  ">
         <button  className="ml-5 hover:text-gray-500 active:text-gray-200" onClick={goBack}>
           <MoveLeft />
         </button>
@@ -95,11 +95,11 @@ const ChatBox = ({ selectedUser, goBack }) => {
             src={selectedUser.profilePic || profile_pic}
             alt="profile"
           />
-          <p className="text-[16px] font-bold">{selectedUser.username}</p>
+          <p className="text-[16px] font-bold dark:text-white">{selectedUser.username}</p>
         </Link>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-2">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-2 bg-white dark:bg-black">
         {renderWithSeparators()}
         <div ref={scrollRef}></div>
       </div>

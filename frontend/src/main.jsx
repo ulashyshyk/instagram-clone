@@ -8,20 +8,24 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { PostProvider } from "./context/PostContext.jsx";
 import { NotificationProvider } from "./context/NotificationContext.jsx";
 import { ChatProvider } from "./context/ChatContext.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <ChatProvider>
-        <NotificationProvider>
-          <PostProvider>
-            <ChakraProvider>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </ChakraProvider>
-          </PostProvider>
-        </NotificationProvider>
-      </ChatProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ChatProvider>
+          <NotificationProvider>
+            <PostProvider>
+              <ChakraProvider>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </ChakraProvider>
+            </PostProvider>
+          </NotificationProvider>
+        </ChatProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </StrictMode>
 );

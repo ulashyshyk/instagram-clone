@@ -36,13 +36,13 @@ const PostActions = ({ post, onLike,onCommentClick,type }) => {
           )}
         </button>
           
-        <FaRegComment onClick={onCommentClick} className="text-gray-700 hover:scale-110 transition-transform cursor-pointer" />
+        <FaRegComment onClick={onCommentClick} className="text-gray-700 dark:text-gray-300 hover:scale-110 transition-transform cursor-pointer" />
       </div>
-      {likesCount === 0 ? (<p className='text-[14px] mt-1'>Be the first to <span className='font-medium'>like this</span></p>) 
-      : (<p className='text-[14px] font-medium mt-1'>{likesCount} {likesCount === 1 ? 'like' : 'likes'}</p>)}
+      {likesCount === 0 ? (<p className='text-[14px] mt-1 text-black dark:text-white'>Be the first to <span className='font-medium'>like this</span></p>) 
+      : (<p className='text-[14px] font-medium mt-1 text-black dark:text-white'>{likesCount} {likesCount === 1 ? 'like' : 'likes'}</p>)}
       
       {type !== 'feed' && 
-      (<p className="text-xs text-gray-400">
+      (<p className="text-xs text-gray-400 dark:text-gray-500">
         {dayjs(post.createdAt).fromNow()}
       </p>)        
         } 

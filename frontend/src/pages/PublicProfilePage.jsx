@@ -80,7 +80,7 @@ const PublicProfilePage = () => {
   if (!user)
     return (
       <div className="flex h-[100vh] flex-row items-center justify-center">
-        <p className="font-medium font-2xl">User not found.</p>
+        <p className="font-medium font-2xl text-black dark:text-white">User not found.</p>
       </div>
     );
   return (
@@ -93,9 +93,9 @@ const PublicProfilePage = () => {
             onFollowToggle={handleFollowToggle}
             followLoading={followLoading}
           />
-          <div className="border-t border-gray-200 w-[80%] h-auto mb-auto mt-10 flex justify-center p-2 gap-1 items-center">
-            <LiaTableSolid />
-            <p className="text-[12px] font-medium">POSTS</p>
+          <div className="border-t border-gray-200 dark:border-gray-800 w-[80%] h-auto mb-auto mt-10 flex justify-center p-2 gap-1 items-center">
+            <LiaTableSolid className="text-black dark:text-white" />
+            <p className="text-[12px] font-medium text-black dark:text-white">POSTS</p>
           </div>
           <div className="grid grid-cols-3 gap-1">
             {user.posts.map((post) => (
@@ -109,7 +109,7 @@ const PublicProfilePage = () => {
                 className="w-[100px] h-[100px] rounded-full flex items-center justify-center md:mr-2 object-cover cursor-pointer"
                 src={camera2}
               />
-              <p className="font-bold text-[30px]">No Posts Yet</p>
+              <p className="font-bold text-[30px] text-black dark:text-white">No Posts Yet</p>
             </div>
           )}
           <Footer />

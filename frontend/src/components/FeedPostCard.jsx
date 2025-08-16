@@ -86,9 +86,9 @@ const FeedPostCard = ({ post }) => {
           className="object-cover rounded-full w-[42px] h-[42px] mr-1"
           src={post.author.profilePic || profile_pic}
         />
-        <p className="text-[14px] font-medium">{post.author.username}</p>
-        <p className="text-[#737373]">•</p>
-        <p className="text-[#737373] text-[14px]">
+        <p className="text-[14px] font-medium text-black dark:text-white">{post.author.username}</p>
+        <p className="text-[#737373] dark:text-gray-400">•</p>
+        <p className="text-[#737373] dark:text-gray-400 text-[14px]">
           {formatTimeAgo(post.createdAt)}
         </p>
       </Link>
@@ -146,9 +146,9 @@ const FeedPostCard = ({ post }) => {
         />
       </div>
       {post.description && (
-        <div>
+        <div className="text-black dark:text-white">
           <Link
-            className="text-[14px] pl-[8px]  font-medium mr-2"
+            className="text-[14px] pl-[8px]  font-medium mr-2 text-black dark:text-white"
             to={`/profile/${post.author.username}`}
           >
             {post.author.username}

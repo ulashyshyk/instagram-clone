@@ -62,14 +62,14 @@ function App() {
 
   if (authChecking) {
     return (
-      <div className="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
-        <span className="text-gray-600 animate-pulse text-sm">Loading...</span>
+      <div className="fixed inset-0 z-[9999] bg-white dark:bg-black flex items-center justify-center">
+        <span className="text-gray-600 dark:text-gray-300 animate-pulse text-sm">Loading...</span>
       </div>
     )
   }
   
   return (
-    <div>
+    <div className="min-h-screen bg-white dark:bg-black">
       <Toaster position='top-center' reverseOrder={false}/>
 
       <Routes location={location}>

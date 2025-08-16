@@ -184,28 +184,28 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
         </div>
 
 
-        <div className="w-full md:w-[40%] h-[50vh] sm:h-[40vh] md:h-full flex flex-col bg-white min-h-0">
+        <div className="w-full md:w-[40%] h-[50vh] sm:h-[40vh] md:h-full flex flex-col bg-white dark:bg-black min-h-0">
           <div className='flex flex-row p-4 items-center justify-between'>
             <div className='flex flex-row mb-2 items-center gap-3'>
               <img className='w-[40px] h-[40px] rounded-full object-cover cursor-pointer'  src={user.profilePic || profile_pic}/>
-              <p className='pb-3 cursor-pointer hover:text-gray-500'>{user.username}</p>
+              <p className='pb-3 cursor-pointer hover:text-gray-500 dark:text-white dark:hover:text-gray-400'>{user.username}</p>
               {editing && (
               <div className="px-4 py-2">
                 <textarea
-                  className="w-full border rounded p-2 text-sm"
+                  className="w-full border rounded p-2 text-sm bg-white dark:bg-gray-800 text-black dark:text-white border-gray-200 dark:border-gray-600"
                   value={descDraft}
                   onChange={(e) => setDescDraft(e.target.value)}
                 />
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={handleEditPost}
-                    className="text-blue-500 font-semibold"
+                    className="text-blue-500 dark:text-blue-400 font-semibold"
                   >
                     Save
                   </button>
                   <button
                     onClick={() => setEditing(false)}
-                    className="text-gray-500 ml-5 font-medium"
+                    className="text-gray-500 dark:text-gray-400 ml-5 font-medium"
                   >
                     Cancel
                   </button>
@@ -213,9 +213,9 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
               </div>
             )}
             </div>     
-            <button onClick={() => setShowPostMenu(true)} className='pb-3 text-xl hover:text-gray-500'><HiDotsHorizontal /></button>
+            <button onClick={() => setShowPostMenu(true)} className='pb-3 text-xl hover:text-gray-500 dark:text-white dark:hover:text-gray-400'><HiDotsHorizontal /></button>
           </div>
-          <p className="border-t border-gray-200 w-full -mt-3"></p>
+          <p className="border-t border-gray-200 dark:border-gray-800 w-full -mt-3"></p>
 
         {showPostMenu && (
           <PostActionModal 
@@ -236,7 +236,7 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
             />
           </div>
 
-          <div className="border-t border-gray-200 w-full"></div>
+          <div className="border-t border-gray-200 dark:border-gray-800 w-full"></div>
 
           <div className="p-2 sm:p-4 mt-auto">
             <PostActions post={post} onCommentClick={()=> commentInputRed.current?.focusInput()}/>

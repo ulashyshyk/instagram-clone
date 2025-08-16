@@ -25,7 +25,7 @@ const PublicProfile = ({ user, onFollowToggle, followLoading }) => {
         />
         <div className="w-full md:w-[65%]">
           <div className="flex flex-row flex-wrap mt-3 gap-1 md:gap-10 md:ml-6 items-center">
-            <p className="md:text-xl cursor-pointer font-medium">
+            <p className="md:text-xl cursor-pointer font-medium text-black dark:text-white">
               {user.username}
             </p>
             <div className="flex gap-2 md:gap-3 flex-wrap">
@@ -47,24 +47,25 @@ const PublicProfile = ({ user, onFollowToggle, followLoading }) => {
                 )}
               </button>
 
-              <button onClick={handleMessageClick} className="px-3 py-1.5 md:px-4 md:py-2 font-medium bg-[#EFEFEF] text-xs md:text-sm rounded-xl hover:bg-gray-200 whitespace-nowrap">
+              <button onClick={handleMessageClick} className="px-3 py-1.5 md:px-4 md:py-2 font-medium bg-[#EFEFEF] dark:bg-gray-700 text-xs md:text-sm rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 whitespace-nowrap text-black dark:text-white">
                 Message
               </button>
             </div>
           </div>
           <div className="flex flex-row text-[13px] md:text-[16px] gap-3 md:gap-6 py-2">
-            <p>
+            <p className="text-black dark:text-white">
               {user.posts.length}
-              <span className="text-gray-500 ml-1.5">posts</span>
+              <span className="text-gray-500 dark:text-gray-400 ml-1.5">posts</span>
             </p>
             <button
               onClick={() => {
                 setModalType("followers");
                 setIsFollowingFollowersModalOpen(true);
               }}
+              className="text-black dark:text-white"
             >
               {user.followersCount}
-              <span className="text-gray-500 ml-1.5">followers</span>
+              <span className="text-gray-500 dark:text-gray-400 ml-1.5">followers</span>
             </button>
 
             <button
@@ -72,9 +73,10 @@ const PublicProfile = ({ user, onFollowToggle, followLoading }) => {
                 setModalType("following");
                 setIsFollowingFollowersModalOpen(true);
               }}
+              className="text-black dark:text-white"
             >
               {user.followingCount}
-              <span className="text-gray-500 ml-1.5">following</span>
+              <span className="text-gray-500 dark:text-gray-400 ml-1.5">following</span>
             </button>
 
             <FollowersFollowingModal
@@ -85,8 +87,8 @@ const PublicProfile = ({ user, onFollowToggle, followLoading }) => {
             />
           </div>
           <div className="py-2 text-[13px] md:text-[15px]">
-            <p className="text-sm font-medium">{user.name}</p>
-            <p className="text-sm cursor-pointer">{user.bio}</p>
+            <p className="text-sm font-medium text-black dark:text-white">{user.name}</p>
+            <p className="text-sm cursor-pointer text-black dark:text-white">{user.bio}</p>
           </div>
         </div>
       </div>

@@ -43,11 +43,11 @@ const Profile = () => {
             {isModalOpen && <Upload setIsModalOpen={setIsModalOpen} updateUser={updateUser}/>}
             <div className='w-[65%]'>
                 <div className='flex flex-row mt-3 gap-1 md:gap-10 md:ml-6 items-center'>
-                    <p className='md:text-xl font-medium'>{user.username}</p>
-                    <Link to='/edit-profile' className='text-sm bg-gray-200  py-2 px-2 font-medium rounded-lg hover:bg-gray-300 active:bg-gray-200 select-none'>Edit Profile</Link>
+                    <p className='md:text-xl font-medium text-black dark:text-white'>{user.username}</p>
+                    <Link to='/edit-profile' className='text-sm bg-gray-200 dark:bg-gray-700 py-2 px-2 font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 active:bg-gray-200 dark:active:bg-gray-700 select-none text-black dark:text-white'>Edit Profile</Link>
                 </div>
                 <div className='flex flex-row text-[13px] md:text-[16px] gap-3 md:gap-6 bg py-2'>
-                    <p>{posts.length}<span className='text-gray-500 ml-1.5'>posts</span> </p>
+                    <p className='text-black dark:text-white'>{posts.length}<span className='text-gray-500 dark:text-gray-400 ml-1.5'>posts</span> </p>
                    
                     <button 
                      onClick={ () => {
@@ -55,7 +55,7 @@ const Profile = () => {
                       setIsFollowingFollowersModalOpen(true)
                      }
                      }
-                    >{user.followers.length}<span className='text-gray-500 ml-1.5'>followers</span> 
+                    className='text-black dark:text-white'>{user.followers.length}<span className='text-gray-500 dark:text-gray-400 ml-1.5'>followers</span> 
                     </button>
 
                     <button
@@ -63,7 +63,7 @@ const Profile = () => {
                         setModalType('following');
                         setIsFollowingFollowersModalOpen(true)
                      }}
-                    >{user.following.length}<span className='text-gray-500 ml-1.5'>following</span> 
+                    className='text-black dark:text-white'>{user.following.length}<span className='text-gray-500 dark:text-gray-400 ml-1.5'>following</span> 
                     </button>
 
                     <FollowersFollowingModal 
@@ -75,8 +75,8 @@ const Profile = () => {
                     
                 </div>
                 <div className='py-2  text-[13px] md:text-[15px]'>
-                    <p className='font-medium'>{user.name}</p>
-                    <p className='cursor-pointer'>{user.bio}</p>
+                    <p className='font-medium text-black dark:text-white'>{user.name}</p>
+                    <p className='cursor-pointer text-black dark:text-white'>{user.bio}</p>
                 </div>
             </div>       
         </div>

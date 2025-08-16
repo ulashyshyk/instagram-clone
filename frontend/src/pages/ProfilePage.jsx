@@ -60,9 +60,9 @@ const ProfilePage = () => {
           className="flex flex-col w-full p-4 md:ml-[249px] justify-between items-center"
         >
           <Profile />
-          <div className="border-t border-gray-200 w-[80%] h-auto mb-auto mt-10 flex justify-center p-2 gap-1 items-center">
-            <LiaTableSolid />
-            <p className="text-[12px] font-medium">POSTS</p>
+          <div className="border-t border-gray-200 dark:border-gray-800 w-[80%] h-auto mb-auto mt-10 flex justify-center p-2 gap-1 items-center">
+            <LiaTableSolid className="text-black dark:text-white" />
+            <p className="text-[12px] font-medium text-black dark:text-white">POSTS</p>
           </div>
 
           {loadingPosts ? (

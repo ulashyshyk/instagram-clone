@@ -87,7 +87,7 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
         ✕
       </button>
 
-      <div className="bg-white shadow-2xl flex flex-col md:flex-row w-full h-full md:w-[1100px] md:h-[630px] overflow-hidden relative md:rounded-lg">
+      <div className="bg-white dark:bg-black shadow-2xl flex flex-col md:flex-row w-full h-full md:w-[1100px] md:h-[630px] overflow-hidden relative md:rounded-lg">
         <div
           className="relative w-full md:w-[60%] h-[60vh] md:h-full"
           onTouchStart={handleTouchStart}
@@ -143,7 +143,7 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
           )}
         </div>
 
-        <div className="w-full md:w-[40%] h-[50vh] sm:h-[40vh] md:h-full flex flex-col bg-white min-h-0">
+        <div className="w-full md:w-[40%] h-[50vh] sm:h-[40vh] md:h-full flex flex-col bg-white dark:bg-black min-h-0">
           {type === 'feed' ? (
             <Link to={`/profile/${post.author?.username}`} className="flex flex-row p-4 items-center gap-3">
               <img
@@ -151,7 +151,7 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
                 src={post.author?.profilePic || profile_pic}
                 alt="author"
               />
-              <p className="font-medium cursor-pointer hover:text-gray-500">{post.author?.username}</p>
+              <p className="font-medium cursor-pointer hover:text-gray-500 dark:text-white dark:hover:text-gray-400">{post.author?.username}</p>
             </Link>
           ) : (
             <div className="flex flex-row p-4 items-center gap-3">
@@ -160,11 +160,11 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
                 src={post.author?.profilePic || profile_pic}
                 alt="author"
               />
-              <p className="font-medium cursor-pointer hover:text-gray-500">{post.author?.username}</p>
+              <p className="font-medium cursor-pointer hover:text-gray-500 dark:text-white dark:hover:text-gray-400">{post.author?.username}</p>
             </div>
           )}
 
-          <p className="border-t border-gray-200 w-full"></p>
+          <p className="border-t border-gray-200 dark:border-gray-800 w-full"></p>
 
           <div className="flex-1 overflow-y-auto px-2 sm:px-4">
             <CommentSection

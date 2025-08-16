@@ -117,15 +117,15 @@ const EditProfileForm = () => {
 
   return (
     <div className="flex flex-col  w-[400px] md:w-[700px] p-10">
-      <p className="text-[20px] md:p-0 px-1 font-medium ">Edit Profile</p>
-      <div className="bg-[#EFEFEF]  w-[330px] md:w-[430px] lg:w-[530px]  h-[100px] flex mt-10 items-center p-5 rounded-xl">
+      <p className="text-[20px] md:p-0 px-1 font-medium text-black dark:text-white">Edit Profile</p>
+      <div className="bg-[#EFEFEF] dark:bg-gray-800  w-[330px] md:w-[430px] lg:w-[530px]  h-[100px] flex mt-10 items-center p-5 rounded-xl">
         <img
           className="w-[60px] h-[60px] rounded-full object-cover"
           src={user.profilePic || profile_pic}
         />
         <div className="ml-3">
-          <p className="text-[16px]">{user.username}</p>
-          <p className="text-[14px] text-[#737373]">{user.name}</p>
+          <p className="text-[16px] text-black dark:text-white">{user.username}</p>
+          <p className="text-[14px] text-[#737373] dark:text-gray-400">{user.name}</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -137,14 +137,14 @@ const EditProfileForm = () => {
           <Upload setIsModalOpen={setIsModalOpen} updateUser={updateUser} />
         )}
       </div>
-      <p className="text-[20px] md:p-0 px-1 font-medium mt-10">Bio</p>
+      <p className="text-[20px] md:p-0 px-1 font-medium mt-10 text-black dark:text-white">Bio</p>
 
       <form onSubmit={handleBioUpdate} className="mt-5 relative">
         <textarea
-          className={`w-[315px] h-[90px] md:w-[430px] lg:w-[530px] lg:h-[70px] border-2 rounded-xl p-2 text-[14px] resize-none overflow-y-hidden ${
+          className={`w-[315px] h-[90px] md:w-[430px] lg:w-[530px] lg:h-[70px] border-2 rounded-xl p-2 text-[14px] resize-none overflow-y-hidden bg-white dark:bg-gray-800 text-black dark:text-white border-gray-200 dark:border-gray-600 ${
             bio && bio.length > 149
               ? "border-red-400 outline-none"
-              : "border-gray-200"
+              : "border-gray-200 dark:border-gray-600"
           }`}
           type="text"
           name="bio"
@@ -152,7 +152,7 @@ const EditProfileForm = () => {
           onChange={(e) => setBio(e.target.value)}
           value={bio}
         />
-        <p className="absolute right-1 mr-5 md:left-1/2 md:ml-[68px] lg:ml-[170px] bottom-2 text-gray-500 text-[12px] font-medium  p-1">
+        <p className="absolute right-1 mr-5 md:left-1/2 md:ml-[68px] lg:ml-[170px] bottom-2 text-gray-500 dark:text-gray-400 text-[12px] font-medium  p-1">
           {bio.length || 0}/150
         </p>
         <button className="absolute bottom-1/2 ml-2 text-[20px] text-blue-500 hover:text-blue-600">
@@ -160,10 +160,10 @@ const EditProfileForm = () => {
         </button>
       </form>
 
-      <p className="text-[20px] px-1 md:p-0 font-medium mt-10">Name</p>
+      <p className="text-[20px] px-1 md:p-0 font-medium mt-10 text-black dark:text-white">Name</p>
       <form onSubmit={handleNameUpdate} className="mt-5 relative">
         <input
-          className="w-[315px] md:w-[430px] lg:w-[530px] h-[70px] border-2 rounded-xl p-2 text-[14px] resize-none overflow-y-hidden border-gray-200"
+          className="w-[315px] md:w-[430px] lg:w-[530px] h-[70px] border-2 rounded-xl p-2 text-[14px] resize-none overflow-y-hidden border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white"
           type="text"
           name="name"
           onChange={(e) => setName(e.target.value)}

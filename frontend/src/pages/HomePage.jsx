@@ -27,7 +27,7 @@ const HomePage = () => {
   },[])
   return (
     <div className='relative min-h-screen pb-[65px] md:pb-0 flex overflow-x-hidden'>
-      <div className="fixed md:static w-full md:w-[250px] md:h-screen bg-white shadow md:shadow-none z-50">
+      <div className="fixed md:static w-full md:w-[250px] md:h-screen bg-white dark:bg-black shadow md:shadow-none z-50">
         <Sidebar/>
       </div>
         <div className='flex flex-col w-full  p-4  justify-between items-center'>
@@ -36,7 +36,7 @@ const HomePage = () => {
               <Spinner/>
             </div>
           ) : feedPosts.length === 0 ? (
-            <div className="text-gray-400 mt-10 text-sm h-[90vh]">No posts yet. Follow users to see their posts!</div>
+            <div className="text-gray-400 dark:text-gray-500 mt-10 text-sm h-[90vh]">No posts yet. Follow users to see their posts!</div>
           ) : (    
             <div className='flex flex-col gap-10'>
               {feedPosts.map(post => (

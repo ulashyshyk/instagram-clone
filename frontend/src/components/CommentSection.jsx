@@ -28,8 +28,8 @@ const CommentSection = ({
     <div className="h-full px-4 pt-4 space-y-4">
       {comments.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full text-center">
-          <p className="text-[24px] font-bold">No comments yet.</p>
-          <p className="text-[14px]">Start the conversation.</p>
+          <p className="text-[24px] font-bold text-black dark:text-white">No comments yet.</p>
+          <p className="text-[14px] text-black dark:text-white">Start the conversation.</p>
         </div>
       ) : (
         <div className="p-1 flex flex-col gap-5">
@@ -53,13 +53,13 @@ const CommentSection = ({
                   <div className="flex flex-col w-full">
                     <div className="flex flex-row gap-2 items-center">
                       <Link to={`/profile/${comment.user.username}`}>
-                        <p className="text-sm font-semibold">
+                        <p className="text-sm font-semibold text-black dark:text-white">
                           {comment.user.username}
                         </p>
                       </Link>
-                      <p className="text-[14px] break-words">{comment.text}</p>
+                      <p className="text-[14px] break-words text-black dark:text-white">{comment.text}</p>
                     </div>
-                    <p className="text-[12px] text-gray-400">
+                    <p className="text-[12px] text-gray-400 dark:text-gray-500">
                       {dayjs(comment.createdAt).fromNow()}
                     </p>
                   </div>
@@ -73,12 +73,12 @@ const CommentSection = ({
                   />
                   <div className="flex flex-col w-full">
                     <div className="flex flex-row gap-2 items-center">
-                      <p className="text-sm font-semibold">
+                      <p className="text-sm font-semibold text-black dark:text-white">
                         {comment.user.username}
                       </p>
-                      <p className="text-[14px] break-words">{comment.text}</p>
+                      <p className="text-[14px] break-words text-black dark:text-white">{comment.text}</p>
                     </div>
-                    <p className="text-[12px] text-gray-400">
+                    <p className="text-[12px] text-gray-400 dark:text-gray-500">
                       {dayjs(comment.createdAt).fromNow()}
                     </p>
                   </div>
@@ -90,7 +90,7 @@ const CommentSection = ({
                   <div className="hidden group-hover:block">
                     <button
                       onClick={() => setSelectedCommentId(comment._id)}
-                      className="text-gray-500"
+                      className="text-gray-500 dark:text-gray-400"
                     >
                       <HiDotsHorizontal size={18} />
                     </button>

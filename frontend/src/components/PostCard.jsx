@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PostView from './PostView'
 import { MdCollections, MdPlayCircleFilled } from "react-icons/md"
 
@@ -11,9 +11,48 @@ const PostCard = ({ post, onPostDeleted, autoOpen, setSelectedPostId }) => {
     }
   }, [autoOpen])
 
-  const previewMedia = Array.isArray(post.media) && post.media.length > 0 ? post.media[0] : null
   const hasMultipleMedia = Array.isArray(post.media) && post.media.length > 1
   const isSingleVideo = post.media?.length === 1 && post.media[0].type === 'video'
+  const [previewIndex, setPreviewIndex] = useState(0)
+  const touchStartXRef = useRef(null)
+  const touchEndXRef = useRef(null)
+  const wasSwipingRef = useRef(false)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const previewMedia = post.media?.[previewIndex] ?? null
+
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    touchEndXRef.current = null
+    wasSwipingRef.current = false
+    setIsDragging(true)
+  }
+
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    if (touchStartXRef.current != null && touchEndXRef.current != null) {
+      setDragOffset(touchEndXRef.current - touchStartXRef.current)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartXRef.current == null || touchEndXRef.current == null) return
+    const deltaX = touchStartXRef.current - touchEndXRef.current
+    const threshold = 40
+    if (post.media?.length > 1 && Math.abs(deltaX) > threshold) {
+      wasSwipingRef.current = true
+      if (deltaX > 0 && previewIndex < post.media.length - 1) {
+        setPreviewIndex(prev => prev + 1)
+      } else if (deltaX < 0 && previewIndex > 0) {
+        setPreviewIndex(prev => prev - 1)
+      }
+    }
+    setIsDragging(false)
+    setDragOffset(0)
+    touchStartXRef.current = null
+    touchEndXRef.current = null
+  }
 
   return (
     <>
@@ -31,27 +70,47 @@ const PostCard = ({ post, onPostDeleted, autoOpen, setSelectedPostId }) => {
       )}
 
       <div
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => {
+          if (wasSwipingRef.current) {
+            wasSwipingRef.current = false
+            return
+          }
+          setIsModalOpen(true)
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         className="w-full max-w-[160px] aspect-[3/4] sm:max-w-[200px] bg-white shadow-2xl hover:bg-gray-100 overflow-hidden cursor-pointer relative group"
       >
-        {previewMedia?.type === 'video' ? (
-          <video
-            src={previewMedia.url}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            muted
-            playsInline
-            autoPlay
-            loop
+        <div className="w-full h-full overflow-hidden">
+          <div
+            className={`${isDragging ? '' : 'transition-transform duration-300'} flex w-full h-full`}
+            style={{ transform: `translateX(calc(-${previewIndex * 100}% + ${dragOffset}px))` }}
           >
-            Your browser does not support the video tag.
-          </video>
-        ) : (
-          <img
-            src={previewMedia?.url}
-            alt="post"
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        )}
+            {(post.media ?? []).map((m, idx) => (
+              <div key={idx} className="w-full h-full flex-none">
+                {m?.type === 'video' ? (
+                  <video
+                    src={m.url}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    muted
+                    playsInline
+                    autoPlay
+                    loop
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <img
+                    src={m?.url}
+                    alt="post"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
 
         {hasMultipleMedia && (
           <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-1 rounded-full">

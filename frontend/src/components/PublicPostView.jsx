@@ -11,8 +11,40 @@ import { Link } from 'react-router-dom'
 const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
   const [post, setPost] = useState(initialPost)
   const [mediaIndex, setMediaIndex] = useState(0)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
   const commentInputRef = useRef()
   const { user } = useAuth()
+  const touchStartXRef = useRef(null)
+  const touchEndXRef = useRef(null)
+
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    touchEndXRef.current = null
+    setIsDragging(true)
+  }
+
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    if (touchStartXRef.current != null && touchEndXRef.current != null) {
+      setDragOffset(touchEndXRef.current - touchStartXRef.current)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartXRef.current == null || touchEndXRef.current == null) return
+    const deltaX = touchStartXRef.current - touchEndXRef.current
+    const threshold = 50
+    if (deltaX > threshold && mediaIndex < (post.media?.length ?? 0) - 1) {
+      setMediaIndex(prev => prev + 1)
+    } else if (deltaX < -threshold && mediaIndex > 0) {
+      setMediaIndex(prev => prev - 1)
+    }
+    setIsDragging(false)
+    setDragOffset(0)
+    touchStartXRef.current = null
+    touchEndXRef.current = null
+  }
 
   useEffect(() => {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
@@ -56,25 +88,41 @@ const PublicPostView = ({ setIsModalOpen, post: initialPost, type }) => {
       </button>
 
       <div className="bg-white shadow-2xl flex flex-col md:flex-row w-full h-full md:w-[1100px] md:h-[630px] overflow-hidden relative md:rounded-lg">
-        <div className="relative w-full md:w-[60%] h-[60vh] md:h-full">
-          {post.media?.[mediaIndex]?.type === 'video' ? (
-            <video
-              src={post.media?.[mediaIndex]?.url}
-              className="w-full h-full object-cover"
-              controls
-              playsInline
-              autoPlay
-              loop
+        <div
+          className="relative w-full md:w-[60%] h-[60vh] md:h-full"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="w-full h-full overflow-hidden">
+            <div
+              className={`${isDragging ? '' : 'transition-transform duration-300'} flex w-full h-full`}
+              style={{ transform: `translateX(calc(-${mediaIndex * 100}% + ${dragOffset}px))` }}
             >
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <img
-              src={post.media?.[mediaIndex]?.url}
-              className="w-full h-full object-cover"
-              alt="Post"
-            />
-          )}
+              {(post.media ?? []).map((mediaItem, idx) => (
+                <div key={idx} className="w-full h-full flex-none">
+                  {mediaItem?.type === 'video' ? (
+                    <video
+                      src={mediaItem?.url}
+                      className="w-full h-full object-cover"
+                      controls
+                      playsInline
+                      autoPlay
+                      loop
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : (
+                    <img
+                      src={mediaItem?.url}
+                      className="w-full h-full object-cover"
+                      alt="Post"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
 
           {mediaIndex > 0 && (
             <button

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import profile_pic from "../assets/profile_pic.jpg";
 import PostActions from "./PostActions";
 import PublicPostView from "./PublicPostView";
-import { MdCollections, MdPlayCircleFilled } from "react-icons/md"; // make sure this is imported
+import { MdCollections, MdPlayCircleFilled } from "react-icons/md"; 
 
 const FeedPostCard = ({ post }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +27,55 @@ const FeedPostCard = ({ post }) => {
     return `${weeks}w`;
   };
 
+  const [previewIndex, setPreviewIndex] = useState(0)
+  const touchStartXRef = useRef(null)
+  const touchEndXRef = useRef(null)
+  const wasSwipingRef = useRef(false)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const currentMedia = post.media?.[previewIndex]
+
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    touchEndXRef.current = null
+    wasSwipingRef.current = false
+    setIsDragging(true)
+  }
+
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    if (touchStartXRef.current != null && touchEndXRef.current != null) {
+      setDragOffset(touchEndXRef.current - touchStartXRef.current)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartXRef.current == null || touchEndXRef.current == null) return
+    const deltaX = touchStartXRef.current - touchEndXRef.current
+    const threshold = 40
+    if (post.media?.length > 1 && Math.abs(deltaX) > threshold) {
+      wasSwipingRef.current = true
+      if (deltaX > 0 && previewIndex < post.media.length - 1) {
+        setPreviewIndex(prev => prev + 1)
+      } else if (deltaX < 0 && previewIndex > 0) {
+        setPreviewIndex(prev => prev - 1)
+      }
+    }
+    setIsDragging(false)
+    setDragOffset(0)
+    touchStartXRef.current = null
+    touchEndXRef.current = null
+  }
+
+  const handleCardClick = () => {
+    if (wasSwipingRef.current) {
+      wasSwipingRef.current = false
+      return
+    }
+    setIsModalOpen(true)
+  }
+
   return (
     <div className="flex flex-col w-[335px] h-[550px] md:w-[450px] md:h-[650px]">
       <Link
@@ -43,25 +92,38 @@ const FeedPostCard = ({ post }) => {
           {formatTimeAgo(post.createdAt)}
         </p>
       </Link>
-
       <div
         className="relative mt-2 h-[80%] shadow-xl cursor-pointer"
-        onClick={() => setIsModalOpen(true)}
+        onClick={handleCardClick}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
-        {post.media?.[0]?.type === "video" ? (
-          <video
-            src={post.media[0].url}
-            className="w-full h-full object-cover rounded-md"
-            muted
-            playsInline
-          />
-        ) : (
-          <img
-            className="w-full h-full object-cover rounded-md"
-            src={post.media?.[0]?.url}
-            alt="Post"
-          />
-        )}
+        <div className="w-full h-full overflow-hidden rounded-md">
+          <div
+            className={`${isDragging ? '' : 'transition-transform duration-300'} flex w-full h-full`}
+            style={{ transform: `translateX(calc(-${previewIndex * 100}% + ${dragOffset}px))` }}
+          >
+            {(post.media ?? []).map((m, idx) => (
+              <div key={idx} className="w-full h-full flex-none">
+                {m?.type === "video" ? (
+                  <video
+                    src={m.url}
+                    className="w-full h-full object-cover rounded-md"
+                    muted
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    className="w-full h-full object-cover rounded-md"
+                    src={m?.url}
+                    alt="Post"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
 
         {post.media?.length > 1 && (
           <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-1 rounded-full">

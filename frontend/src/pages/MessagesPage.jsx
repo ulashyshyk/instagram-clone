@@ -47,7 +47,7 @@ const MessagesPage = () => {
         <div className="w-[300px]">
           <ChatSidebar setSelectedUser={setSelectedUser} />
         </div>
-        <div className="flex-grow ">
+        <div className="flex flex-col flex-grow min-h-0">
           {selectedUser ? (
             <ChatBox 
                 selectedUser={selectedUser} 

@@ -59,7 +59,7 @@ const Sidebar = ({ compact = false }) => {
       </button>
 
       {activeModal === "search" && (
-        <SearchModal isOpen={true} onClose={() => setActiveModal(null)} />
+        <SearchModal isOpen={true} onClose={() => setActiveModal(null)} isSidebarCompact={compact} />
       )}
 
       <NavLink
@@ -90,7 +90,7 @@ const Sidebar = ({ compact = false }) => {
       </button>
 
       {activeModal === "notification" && (
-        <NotificationModal isOpen={true} onClose={() => setActiveModal(null)} />
+        <NotificationModal isOpen={true} onClose={() => setActiveModal(null)} isSidebarCompact={compact} />
       )}
 
       <button

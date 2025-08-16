@@ -11,13 +11,19 @@ const backdrop = {
   hidden: { opacity: 0 },
 }
 
-const slideIn = {
+const desktopSlideIn = {
   hidden: { x: -100},   
   visible: { x: 0 },
   exit: { x: 1000 },
 }
 
-const SearchModal = ({ isOpen, onClose }) => {
+const mobileSlideUp = {
+  hidden: { y: '100%' },
+  visible: { y: 0 },
+  exit: { y: '100%' },
+}
+
+const SearchModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
   const [query,setQuery] = useState("")
   const [results,setResults] = useState([])
 
@@ -43,12 +49,27 @@ const SearchModal = ({ isOpen, onClose }) => {
     return () => clearTimeout(delay)
   },[query])
 
+  // Disable body vertical scroll on mobile when modal is open
+  useEffect(() => {
+    const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isOpen && isMobileViewport) {
+      const originalBodyOverflowY = document.body.style.overflowY;
+      const originalHtmlOverflowY = document.documentElement.style.overflowY;
+      document.body.style.overflowY = 'hidden';
+      document.documentElement.style.overflowY = 'hidden';
+      return () => {
+        document.body.style.overflowY = originalBodyOverflowY;
+        document.documentElement.style.overflowY = originalHtmlOverflowY;
+      };
+    }
+  }, [isOpen]);
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
           <motion.div
-            className="fixed top-0 left-[65px] md:left-[250px] right-0 bottom-0 bg-black bg-opacity-20"
+            className={`fixed z-40 top-0 left-0 right-0 bottom-[80px] md:bottom-0 ${isSidebarCompact ? 'md:left-[85px]' : 'md:left-[249px]'} bg-black bg-opacity-20`}
             variants={backdrop}
             initial="hidden"
             animate="visible"
@@ -56,9 +77,57 @@ const SearchModal = ({ isOpen, onClose }) => {
             onClick={onClose}
           />
 
+          {/* Mobile full-screen bottom sheet */}
           <motion.div
-            className="fixed top-0 left-[65px] md:left-[250px] h-full w-[300px] bg-white z-50 p-6 shadow-lg border-l border-gray-200"
-            variants={slideIn}
+            className="fixed top-0 left-0 right-0 bottom-[80px] z-50 bg-white p-6 md:hidden flex flex-col"
+            variants={mobileSlideUp}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ type: 'tween', ease: "easeInOut", duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              aria-label="Close search"
+              className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100"
+              onClick={onClose}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h2 className="text-2xl font-bold mb-6 pr-10"> Search</h2>
+            <div className="flex items-center w-full bg-gray-200 rounded-lg border border-gray-300 px-2">
+              <IoIosSearch className="text-2xl text-gray-600" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full text-[15px] p-2 bg-gray-200 border-none outline-none focus:ring-0 focus:outline-none active:outline-none"
+                autoFocus
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+            <div className='flex mt-5  max-h-[90%] flex-col gap-4 overflow-y-auto pr-1 w-[105%]'>
+              {results.map((user) => (
+                <Link
+                  to={`/profile/${user.username}`}
+                  className='flex flex-row items-center hover:bg-gray-200 hover:p-0.5 hover:rounded-lg'
+                  key={user._id}
+                  onClick={onClose}
+                >
+                  <img className='w-[50px] h-[50px] rounded-full object-cover'  src={user.profilePic || profile_pic} />
+                  <div className='flex flex-col'>
+                    <p className='text-[14px] font-medium ml-2'>{user.username}</p>
+                    <p className='text-[14px]  ml-2 text-[#737373]'>{user.name}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            className={`hidden md:block fixed top-0 ${isSidebarCompact ? 'left-[85px]' : 'left-[249px]'} h-full w-[300px] bg-white z-50 p-6 shadow-lg border-l border-gray-200`}
+            variants={desktopSlideIn}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -75,24 +144,23 @@ const SearchModal = ({ isOpen, onClose }) => {
                 autoFocus
                 onChange={(e) => setQuery(e.target.value)}
               />
-          </div>
-
-          <div className='flex mt-5 max-h-[80%] flex-col gap-4 overflow-y-auto pr-1'>
-            {results.map((user) => (
-              <Link
-                to={`/profile/${user.username}`}
-                className='flex flex-row items-center hover:bg-gray-200 hover:p-0.5 hover:rounded-lg'
-                key={user._id}
-                onClick={onClose}
-              >
-                <img className='w-[50px] h-[50px] rounded-full object-cover'  src={user.profilePic || profile_pic} />
-                <div className='flex flex-col'>
-                  <p className='text-[14px] font-medium ml-2'>{user.username}</p>
-                  <p className='text-[14px]  ml-2 text-[#737373]'>{user.name}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
+            </div>
+            <div className='flex mt-5 max-h-[80%] flex-col gap-4 overflow-y-auto pr-1'>
+              {results.map((user) => (
+                <Link
+                  to={`/profile/${user.username}`}
+                  className='flex flex-row items-center hover:bg-gray-200 hover:p-0.5 hover:rounded-lg'
+                  key={user._id}
+                  onClick={onClose}
+                >
+                  <img className='w-[50px] h-[50px] rounded-full object-cover'  src={user.profilePic || profile_pic} />
+                  <div className='flex flex-col'>
+                    <p className='text-[14px] font-medium ml-2'>{user.username}</p>
+                    <p className='text-[14px]  ml-2 text-[#737373]'>{user.name}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </motion.div>
         </>
       )}

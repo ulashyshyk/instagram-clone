@@ -18,7 +18,7 @@ const MessageInput = ({ selectedUser }) => {
   }
 
   return (
-    <form onSubmit={handleSend} className="p-4 sticky border-t flex items-center gap-2">
+    <form onSubmit={handleSend} className="p-4 sticky bottom-0 z-10 border-t bg-white flex items-center gap-2">
       <input
         type="text"
         value={text}

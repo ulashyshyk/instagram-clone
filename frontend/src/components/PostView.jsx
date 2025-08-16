@@ -22,7 +22,39 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
   const [editing, setEditing] = useState(false)
   const [descDraft, setDescDraft] = useState(post.description)
   const [mediaIndex,setMediaIndex] = useState(0)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
   const toast = useToast()
+  const touchStartXRef = useRef(null)
+  const touchEndXRef = useRef(null)
+
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    touchEndXRef.current = null
+    setIsDragging(true)
+  }
+
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.changedTouches?.[0]?.clientX ?? null
+    if (touchStartXRef.current != null && touchEndXRef.current != null) {
+      setDragOffset(touchEndXRef.current - touchStartXRef.current)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartXRef.current == null || touchEndXRef.current == null) return
+    const deltaX = touchStartXRef.current - touchEndXRef.current
+    const threshold = 50
+    if (deltaX > threshold && mediaIndex < (post.media?.length ?? 0) - 1) {
+      setMediaIndex(prev => prev + 1)
+    } else if (deltaX < -threshold && mediaIndex > 0) {
+      setMediaIndex(prev => prev - 1)
+    }
+    setIsDragging(false)
+    setDragOffset(0)
+    touchStartXRef.current = null
+    touchEndXRef.current = null
+  }
   const handleDeleteComment = async (commentId) => {
     try {
       const updatedPost = await deleteComment(post._id, commentId)
@@ -111,12 +143,28 @@ const PostView = ({ setIsModalOpen,post : initialPost,onPostDeleted }) => {
         ✕
       </button>
       <div className="bg-white shadow-lg flex flex-col md:flex-row w-full h-full md:w-[1100px] md:h-[630px] overflow-hidden relative md:rounded-lg">
-        <div className='relative w-full md:w-[60%] h-[60vh] md:h-full'>
-          {post.media?.[mediaIndex]?.type === 'video' ? (
-            <video src={post.media?.[mediaIndex]?.url} controls playsInline className='w-full h-full object-cover' />
-          ) : (
-            <img src={post.media?.[mediaIndex]?.url} className='w-full h-full object-cover' alt="Post media" />
-          )}
+        <div
+          className='relative w-full md:w-[60%] h-[60vh] md:h-full'
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className='w-full h-full overflow-hidden'>
+            <div
+              className={`flex w-full h-full ${isDragging ? '' : 'transition-transform duration-300'}`}
+              style={{ transform: `translateX(calc(-${mediaIndex * 100}% + ${dragOffset}px))` }}
+            >
+              {(post.media ?? []).map((mediaItem, idx) => (
+                <div key={idx} className='w-full h-full flex-none'>
+                  {mediaItem?.type === 'video' ? (
+                    <video src={mediaItem?.url} controls playsInline className='w-full h-full object-cover' />
+                  ) : (
+                    <img src={mediaItem?.url} className='w-full h-full object-cover' alt="Post media" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
 
           {mediaIndex > 0 && (
             <button

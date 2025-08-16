@@ -23,7 +23,7 @@ const mobileSlideUp = {
   exit: { y: '100%' },
 };
 
-const NotificationModal = ({ isOpen, onClose }) => {
+const NotificationModal = ({ isOpen, onClose, isSidebarCompact = false }) => {
   const navigate = useNavigate()
   const {setSelectedPostId} = usePost()
   const {notifications,markAllAsRead,refreshNotifications} = useNotification()
@@ -55,13 +55,28 @@ const NotificationModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  // Disable body vertical scroll on mobile when modal is open
+  useEffect(() => {
+    const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isOpen && isMobileViewport) {
+      const originalBodyOverflowY = document.body.style.overflowY;
+      const originalHtmlOverflowY = document.documentElement.style.overflowY;
+      document.body.style.overflowY = 'hidden';
+      document.documentElement.style.overflowY = 'hidden';
+      return () => {
+        document.body.style.overflowY = originalBodyOverflowY;
+        document.documentElement.style.overflowY = originalHtmlOverflowY;
+      };
+    }
+  }, [isOpen]);
+
   console.log('NotificationModal mounted', isOpen)
   return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
           <motion.div
-            className="fixed top-0 left-0 right-0 bottom-[72px] md:bottom-0 md:left-[250px] bg-black bg-opacity-20"
+            className={`fixed z-40 top-0 left-0 right-0 bottom-[60px] md:bottom-0 ${isSidebarCompact ? 'md:left-[85px]' : 'md:left-[249px]'} bg-black bg-opacity-20`}
             variants={backdrop}
             initial="hidden"
             animate="visible"
@@ -71,7 +86,7 @@ const NotificationModal = ({ isOpen, onClose }) => {
 
           {/* Mobile full-screen bottom sheet */}
           <motion.div
-            className="fixed top-0 left-0 right-0 bottom-[72px] z-50 bg-white p-6 md:hidden flex flex-col"
+            className="fixed top-0 left-0 right-0 bottom-[60px] z-50 bg-white p-6 md:hidden flex flex-col"
             variants={mobileSlideUp}
             initial="hidden"
             animate="visible"
@@ -157,7 +172,7 @@ const NotificationModal = ({ isOpen, onClose }) => {
           </motion.div>
 
           <motion.div
-            className="hidden md:block fixed top-0 left-[250px] h-full w-[320px] bg-white z-50 p-6 shadow-lg border-l border-gray-200"
+            className={`hidden md:block fixed top-0 ${isSidebarCompact ? 'left-[85px]' : 'left-[249px]'} h-full w-[320px] bg-white z-50 p-6 shadow-lg border-l border-gray-200`}
             variants={desktopSlideIn}
             initial="hidden"
             animate="visible"
